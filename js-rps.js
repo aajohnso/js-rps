@@ -1,37 +1,52 @@
-game();
+const buttons = document.querySelectorAll('button');
+const roundResultDiv = document.querySelector('#roundResult');
+const playerScoreDiv = document.querySelector('#playerScore');
+const computerScoreDiv = document.querySelector('#computerScore');
+const winnerDiv = document.querySelector('#winner');
 
-function game() {
-    let playerScore = 0;
-    let computerScore = 0;
+let playerScore = 0;
+let computerScore = 0;
+
+buttons.forEach(button => {
+    button.addEventListener("click", game);
+});
+
+function game(e) {
     
-    for (let i = 0; i<5; i++) {
-        const playerSelection = prompt("Rock, paper, scissors:");
-        const computerSelection = computerPlay();
-        let gameResult = playRound(playerSelection, computerSelection);
-        
-        if (gameResult = 'player') {
+    const playerSelection = e.target.name;
+    const computerSelection = computerPlay();
+    
+    let winner = playRound(playerSelection, computerSelection);
+
+    roundResultDiv.innerText = "Round winner: " + winner;
+    
+    if ( playerScore < 5 && computerScore < 5 ) {
+        if (winner == 'player') {
             playerScore++;
-        } else if (gameResult = 'computer') {
+            if ( playerScore == 5 ) {
+                winnerDiv.innerText = 'PLAYER';
+            }
+        } else if (winner == 'computer') {
             computerScore++;
+            if ( playerScore == 5 ) {
+                winnerDiv.innerText = 'COMPUTER';
+            }
         }
+    } else {
+        buttons.forEach(button => {
+            button.removeEventListener("click", game);
+        });
     }
 
-    if (playerScore > computerScore) {
-        console.log('player wins');
-    } else if (playerScore < computerScore ) {
-        console.log('computer wins');
-    } else {
-        console.log('nobody wins');
-    }
+    playerScoreDiv.innerText = "PLAYER: " + playerScore;
+    computerScoreDiv.innerText = "COMPUTER: " + computerScore;
+
 }
 
 function playRound(playerSelection, computerSelection) {
     let playerPlay = playerSelection.toLowerCase();
     let computerPlay = computerSelection.toLowerCase();
     let winner;
-
-    console.log("Player:" + playerPlay);
-    console.log("Computer:" + computerPlay);
 
     if ( playerPlay == computerPlay ) {
         winner = "tie"
